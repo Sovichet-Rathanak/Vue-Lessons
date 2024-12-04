@@ -3,13 +3,19 @@
     <header>
       <h1>My Friends</h1>
     </header>
+    <new-friend @add-contact="addContact"></new-friend>
     <ul>
       <friend-contact
         v-for="friend in friends"
           :key="friend.id"
+          :id="friend.id"
           :name= "friend.name"
           :phone-number="friend.phoneNumber"
-          :email-address="friend.emailAddress">
+          :email-address="friend.emailAddress"
+          :is-fave = "friend.isFavorite"
+          @toggle-fave = "toggleFavoriteStatus" 
+          @delete-contact="deleteContact"
+          >
       </friend-contact>
     </ul>
   </section>
@@ -24,17 +30,41 @@ export default {
           name: "Mathew Santoro",
           phoneNumber: "089959406",
           emailAddress: "mathew@gmail.com",
-          id: 1
+          isFavorite: false,
+          id: "zaza enjoyer"
         },
         {
           name: "Sovichet Rathanak",
           phoneNumber: "089959406",
+          isFavorite: true,
           emailAddress: "rathanak@gmail.com",
-          id: 2
+          id: "2"
         }
       ]
     };
   },
+  methods:{
+    toggleFavoriteStatus(friendId){
+      const identifiedFriend = this.friends.find((friend) => friend.id === friendId);
+      identifiedFriend.isFavorite  = !identifiedFriend.isFavorite;
+    },
+    addContact(name, phone, email){
+      const newContact = {
+        id: new Date().toISOString(),
+        name: name,
+        phoneNumber: phone,
+        emailAddress: email,
+        isFavorite: false
+      }
+
+      this.friends.push(newContact);
+      console.log(this.friends)
+    },
+    deleteContact(friendId){
+      this.friends = this.friends.filter((friend) => friend.id !== friendId);
+      console.log(this.friends)
+    }
+  }
 };
 </script>
 

@@ -1,8 +1,9 @@
 <template>
   <li>
-    <h2>{{ name }} {{ friendIsFave === true ? '(Favorite)' : ' ' }}</h2>
+    <h2>{{ name }} {{ isFave ? '(Favorite)' : ' ' }}</h2>
     <button @click="toggleFave">Toggle Favorite</button>
     <button @click="toggleDetails">{{ detailsAreVisible ? 'Hide' : 'Show' }} Details</button>
+    <button @click="deleteContact">Delete Contact</button>
     <ul v-if="detailsAreVisible">
       <li>
         <strong>Phone:</strong>
@@ -18,7 +19,22 @@
 
 <script>
 export default {
+  emits:['toggle-fave', 'delete-contact'],
+  // emits:{
+  //   'toggle-favorite': function(id){
+  //     if(id){
+  //       return true;
+  //     }else{
+  //       console.warn('Id is missing!');
+  //       return false;
+  //     }
+  //   }
+  // },
   props:{
+    id:{
+      type: String,
+      required: true
+    },
     name:{
       type: String,
       required: true
@@ -33,11 +49,7 @@ export default {
     },
     isFave:{
       type: Boolean,
-      required: false,
-      default: false,
-      validator: function(value){
-        return value === true || value === false;
-      }
+      required: true,
     }
   },
   data() {
@@ -51,7 +63,10 @@ export default {
       this.detailsAreVisible = !this.detailsAreVisible;
     },
     toggleFave(){
-      this.friendIsFave = !this.friendIsFave;   
+      this.$emit('toggle-fave', this.id);
+    },
+    deleteContact(){
+      this.$emit('delete-contact', this.id);
     }
   }
 };
